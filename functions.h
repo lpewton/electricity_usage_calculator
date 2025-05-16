@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define MAX_LINE 300
 
@@ -20,8 +21,11 @@ typedef struct
 
 
 
-void createTable(tTable *finalTable);
+void createTable(tTable *completeTable);
 
 float calculatePrice(float usage, int hour);
 
 float calculateTotalCost(int maxDays, tTable table);
+
+void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11]);
+

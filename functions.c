@@ -1,6 +1,6 @@
 #include "functions.h"
 
-void createTable(tTable *finalTable)
+void createTable(tTable *completeTable)
 {
     FILE *fileToRead;
     char line[MAX_LINE];
@@ -37,8 +37,8 @@ void createTable(tTable *finalTable)
                     newLine.hour = atoi(&token[0]);
                     newLine.price = calculatePrice(newLine.usage, newLine.hour);
 
-                    finalTable->hours[finalTable->nHours] = newLine;
-                    finalTable->nHours += 1;
+                    completeTable->hours[completeTable->nHours] = newLine;
+                    completeTable->nHours += 1;
                 }
             }
 
@@ -81,4 +81,17 @@ float calculateTotalCost(int maxDays, tTable table)
     }
 
     return totalCost;
+}
+
+void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11]) {
+    int i;
+
+    filteredTable->nHours = 0;
+
+    for (i = 0; i < completeTable.nHours; i++) {
+        if (strcmp(chosenDay, completeTable.hours[i].date) == 0) {
+            filteredTable->hours[filteredTable->nHours] = completeTable.hours[i];
+            filteredTable->nHours += 1;
+        }
+    }
 }
