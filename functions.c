@@ -83,15 +83,33 @@ float calculateTotalCost(int maxDays, tTable table)
     return totalCost;
 }
 
-void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11]) {
+void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11], bool continues)
+{
     int i;
+
+    i = 0;
 
     filteredTable->nHours = 0;
 
-    for (i = 0; i < completeTable.nHours; i++) {
-        if (strcmp(chosenDay, completeTable.hours[i].date) == 0) {
+    if (continues == true)
+    {
+        while (strcmp(chosenDay, completeTable.hours[i].date) != 0)
+        {
             filteredTable->hours[filteredTable->nHours] = completeTable.hours[i];
             filteredTable->nHours += 1;
+            i++;
+        }
+    }
+    else
+    {
+
+        for (i = 0; i < completeTable.nHours; i++)
+        {
+            if (strcmp(chosenDay, completeTable.hours[i].date) == 0)
+            {
+                filteredTable->hours[filteredTable->nHours] = completeTable.hours[i];
+                filteredTable->nHours += 1;
+            }
         }
     }
 }
