@@ -83,7 +83,7 @@ float calculateTotalCost(int maxDays, tTable table)
     return totalCost;
 }
 
-void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11], bool continues)
+void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11], int chosenParameter)
 {
     int i;
 
@@ -91,18 +91,17 @@ void createFilteredTable(tTable completeTable, tTable *filteredTable, char chose
 
     filteredTable->nHours = 0;
 
-    if (continues == true)
+    if (chosenParameter == 0)
     {
-        while (strcmp(chosenDay, completeTable.hours[i].date) != 0)
+        printf("Heey");
+        for (i = 0; i < completeTable.nHours; i++)
         {
             filteredTable->hours[filteredTable->nHours] = completeTable.hours[i];
             filteredTable->nHours += 1;
-            i++;
         }
     }
-    else
+    else if (chosenParameter == 1)
     {
-
         for (i = 0; i < completeTable.nHours; i++)
         {
             if (strcmp(chosenDay, completeTable.hours[i].date) == 0)
@@ -112,4 +111,30 @@ void createFilteredTable(tTable completeTable, tTable *filteredTable, char chose
             }
         }
     }
+    else if (chosenParameter == 2)
+    {
+        while (strcmp(chosenDay, completeTable.hours[i].date) != 0)
+        {
+            filteredTable->hours[filteredTable->nHours] = completeTable.hours[i];
+            filteredTable->nHours += 1;
+            i++;
+        }
+    }
+}
+
+void printInformation(tTable filteredTable, float totalCost)
+{
+    int i;
+
+    printf("DATE       | TIME | USAGE\n");
+    printf("==========================\n");
+    for (i = 0; i < filteredTable.nHours; i++)
+    {
+        {
+            printf("%s | %.2dh   |%.3fkW = %.2f€\n", filteredTable.hours[i].date, filteredTable.hours[i].hour, filteredTable.hours[i].usage, filteredTable.hours[i].price);
+            totalCost = calculateTotalCost(filteredTable.nHours, filteredTable);
+        }
+    }
+    printf("==================================\n");
+    printf("TOTAL:                      %.2f€\n", totalCost);
 }

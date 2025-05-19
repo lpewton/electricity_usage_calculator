@@ -8,58 +8,29 @@ int main(int argc, char **argv)
     float totalCost;
     int chosenParameter;
     char chosenPeriod[11];
-    char temp[7];
-    bool continues;
-
-    int j;
-
-    continues = false;
+    int i;
 
     completeTable.nHours = 0;
 
     createTable(&completeTable);
-    printf("DO YOU WANT A SPECIFIC DAY (1) OR TO SEE FROM A SPECIFIC DAY (2)?\n");
-    printf("PRESS 0 TO SEE ALL?\n");
-    // do {
-    scanf("%d", &chosenParameter);
-    // } while (specificDay != 1 && specificDay != 0);
+    printf("DO YOU WANT TO SEE: \n");
+    printf("0: ALL SPENDING UNTIL TODAY\n");
+    printf("1: A SPECIFIC DAY\n");
+    printf("2: TOTAL SPENGING FROM A SPECIFIC DAY (INPUT THE DAY THAT YOU DO NOT WANT TO SEE))\n");
 
-    if (chosenParameter == 1)
+    do {
+        printf("PICK FROM 0 TO 2\n");
+        scanf("%d", &chosenParameter);
+    } while (chosenParameter < 0 || chosenParameter > 3);
+
+    if (chosenParameter > 0)
     {
         printf("ENTER DAY: (DD-MM-YYYY)\n");
         scanf("%s", chosenPeriod);
-        createFilteredTable(completeTable, &filteredTable, chosenPeriod, continues);
-    }
-    else if (chosenParameter == 2)
-    {
-        printf("ENTER FROM DAY: (DD-MM-YYYY)\n");
-        scanf("%s", chosenPeriod);
-        continues = true;
-        createFilteredTable(completeTable, &filteredTable, chosenPeriod, continues);
     }
 
-    printf("DATE       | TIME | USAGE\n");
-    printf("==========================\n");
-    if (chosenParameter > 0)
-    {
-        for (j = 0; j < filteredTable.nHours; j++)
-        {
-            {
-                printf("%s | %.2dh   |%.3fkW = %.2f€\n", filteredTable.hours[j].date, filteredTable.hours[j].hour, filteredTable.hours[j].usage, filteredTable.hours[j].price);
-                totalCost = calculateTotalCost(filteredTable.nHours, filteredTable);
-            }
-        }
-    }
-    else
-    {
-        for (j = 0; j < completeTable.nHours; j++)
-        {
-            printf("%s | %.2dh   |%.3fkW = %.2f€\n", completeTable.hours[j].date, completeTable.hours[j].hour, completeTable.hours[j].usage, completeTable.hours[j].price);
-            totalCost = calculateTotalCost(completeTable.nHours, completeTable);
-        }
-    }
-
-    printf("==================================\n");
-    printf("TOTAL:                      %.2f€\n", totalCost);
+    createFilteredTable(completeTable, &filteredTable, chosenPeriod, chosenParameter);
+    printInformation(filteredTable, totalCost);
+   
     return 0;
 }
