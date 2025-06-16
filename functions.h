@@ -16,8 +16,17 @@ typedef struct
 
 typedef struct
 {
+    char date[11];
+    float usage;
+    float price;
+} tDay;
+
+typedef struct
+{
+    tDay days[730];
     tHour hours[35040];
     int nHours;
+    int nDays;
 } tTable;
 
 
@@ -26,9 +35,11 @@ void createTable(tTable *completeTable);
 
 float calculatePrice(float usage, int hour);
 
-float calculateTotalCost(int maxDays, tTable table);
+float calculateTotalCost(int maxDays, tTable filteredTable, int chosenPeriod);
 
 void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11], int chosenParameter);
 
-void printInformation(tTable filteredTable, float totalCost);
+void printInformation(tTable filteredTable, float totalCost, int chosenPeriod);
+
+void createDailyTable(tTable completeTable, tTable *dailyTable);
 

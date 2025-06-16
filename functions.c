@@ -4,10 +4,12 @@ void createTable(tTable *completeTable)
 {
     FILE *fileToRead;
     char line[MAX_LINE];
+    char currentDate[11];
     int i;
     int hour;
     float priceValue;
-    tHour newLine;
+    tHour newHour;
+    tDay newDay;
 
     i = 0;
 
@@ -26,18 +28,30 @@ void createTable(tTable *completeTable)
             {
                 if (i % 9 == 6) // Usage
                 {
-                    newLine.usage = strtof(token, NULL);
+                    newHour.usage = strtof(token, NULL);
                 }
                 if (i % 9 == 2) // Date
                 {
-                    strcpy(newLine.date, token);
+                    strcpy(newHour.date, token);
                 }
                 if (i % 9 == 3) // Time
                 {
-                    newLine.hour = atoi(&token[0]);
-                    newLine.price = calculatePrice(newLine.usage, newLine.hour);
+                    newHour.hour = atoi(&token[0]);
+                    newHour.price = calculatePrice(newHour.usage, newHour.hour);
 
-                    completeTable->hours[completeTable->nHours] = newLine;
+                    if (strcmp(currentDate, newHour.date) != 0) {
+                        completeTable->days[completeTable->nDays] = newDay;
+                        strcpy(currentDate, newHour.date);
+                        newDay.usage = newHour.usage;
+                        newDay.price = newHour.price;
+                        strcpy(newDay.date, newHour.date);
+                        completeTable->nDays += 1;
+                    } else {
+                        newDay.usage += newHour.usage;
+                        newDay.price += newHour.price;
+                    }
+
+                    completeTable->hours[completeTable->nHours] = newHour;
                     completeTable->nHours += 1;
                 }
             }
@@ -68,7 +82,7 @@ float calculatePrice(float usage, int hour)
     return price / 100;
 }
 
-float calculateTotalCost(int maxDays, tTable table)
+float calculateTotalCost(int maxDays, tTable filteredTable, int chosenPeriod)
 {
     float totalCost;
     int i;
@@ -77,9 +91,15 @@ float calculateTotalCost(int maxDays, tTable table)
 
     for (i = 0; i < maxDays; i++)
     {
-        totalCost += table.hours[i].price;
+        if (chosenPeriod == 0)
+        {
+            totalCost += filteredTable.hours[i].price;
+        }
+        else
+        {
+            totalCost += filteredTable.days[i].price;
+        }
     }
-
     return totalCost;
 }
 
@@ -87,13 +107,14 @@ void createFilteredTable(tTable completeTable, tTable *filteredTable, char chose
 {
     int i;
 
-    i = 0;
-
     filteredTable->nHours = 0;
 
     if (chosenParameter == 0)
     {
-        printf("Heey");
+        for (i = 0; i < completeTable.nDays; i++) {
+            filteredTable->days[filteredTable->nDays] = completeTable.days[i];
+            filteredTable->nDays += 1;
+        }
         for (i = 0; i < completeTable.nHours; i++)
         {
             filteredTable->hours[filteredTable->nHours] = completeTable.hours[i];
@@ -122,18 +143,30 @@ void createFilteredTable(tTable completeTable, tTable *filteredTable, char chose
     }
 }
 
-void printInformation(tTable filteredTable, float totalCost)
+void printInformation(tTable filteredTable, float totalCost, int chosenPeriod)
 {
     int i;
 
+    if (chosenPeriod == 0) {
     printf("DATE       | TIME | USAGE\n");
     printf("==========================\n");
     for (i = 0; i < filteredTable.nHours; i++)
     {
         {
             printf("%s | %.2dh   |%.3fkW = %.2f€\n", filteredTable.hours[i].date, filteredTable.hours[i].hour, filteredTable.hours[i].usage, filteredTable.hours[i].price);
-            totalCost = calculateTotalCost(filteredTable.nHours, filteredTable);
+            totalCost = calculateTotalCost(filteredTable.nHours, filteredTable, chosenPeriod);
         }
+    }
+    } else {
+    printf("DATE       | USAGE | PRICE \n");
+    printf("==========================\n");
+    for (i = 0; i < filteredTable.nDays; i++)
+    {
+        {
+            printf("%s   |%.3fkW = %.2f€\n", filteredTable.days[i].date, filteredTable.days[i].usage, filteredTable.days[i].price);
+            totalCost = calculateTotalCost(filteredTable.nDays, filteredTable, chosenPeriod);
+    }
+    }
     }
     printf("==================================\n");
     printf("TOTAL:                      %.2f€\n", totalCost);
