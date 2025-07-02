@@ -3,46 +3,36 @@
 /* main */
 int main(int argc, char **argv)
 {
+    // Check if enough arguments are provided
+    if (argc < 3) {
+        fprintf(stderr, "Usage: %s <csv_file> <chosenParameter> [chosenDay] [chosenPeriod]\n", argv[0]);
+        return 1;
+    }
+
     tTable completeTable;
     tTable filteredTable;
-
-    tTable dailyTable;
-
-    float totalCost;
-    int chosenParameter;
-    char chosenDay[11];
-    int chosenPeriod;
-    int i;
+    float totalCost = 0.0;
+    int chosenPeriod = 0;
+    char chosenDay[11] = ""; // optional
+    int chosenParameter = atoi(argv[2]); // convert string to int
 
     completeTable.nHours = 0;
     completeTable.nDays = 0;
 
-    createTable(&completeTable);
+    const char *filename = argv[1];  // first argument is the CSV file name
 
-    printf("DO YOU WANT TO SEE: \n");
-    printf("0: ALL SPENDING UNTIL TODAY\n");
-    printf("1: A SPECIFIC DAY\n");
-    printf("2: TOTAL SPENGING FROM A SPECIFIC DAY (INPUT THE DAY THAT YOU DO NOT WANT TO SEE))\n");
-
-    do
-    {
-        printf("PICK FROM 0 TO 2\n");
-        scanf("%d", &chosenParameter);
-    } while (chosenParameter < 0 || chosenParameter > 3);
-
-    if (chosenParameter == 0)
-    {
-        printf("DO YOU WANT TO SEE BY:\n");
-        printf("0: INTERVALS OF 30 MINUTES\n");
-        printf("1: DAY\n");
-        scanf("%d", &chosenPeriod);
-    }
-    else if (chosenParameter > 0)
-    {
-        printf("ENTER DAY: (DD-MM-YYYY)\n");
-        scanf("%s", chosenDay);
+    // If param is 1 or 2, we expect a chosenDay (e.g., "02-07-2025")
+    if (chosenParameter > 0 && argc > 3) {
+        strncpy(chosenDay, argv[3], sizeof(chosenDay));
     }
 
+    // If param is 0, we expect a period (0 or 1)
+    if (chosenParameter == 0 && argc > 4) {
+        chosenPeriod = atoi(argv[4]);
+    }
+
+    // Now we can call the rest as usual
+    createTable(&completeTable, filename);
     createFilteredTable(completeTable, &filteredTable, chosenDay, chosenParameter);
     printInformation(filteredTable, totalCost, chosenPeriod);
 

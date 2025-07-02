@@ -31,7 +31,7 @@ typedef struct
 
 
 
-void createTable(tTable *completeTable);
+void createTable(tTable *completeTable, const char *filename);
 
 float calculatePrice(float usage, int hour);
 

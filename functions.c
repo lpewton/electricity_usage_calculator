@@ -1,7 +1,8 @@
 #include "functions.h"
 
-void createTable(tTable *completeTable)
+void createTable(tTable *completeTable, const char *filename)
 {
+
     FILE *fileToRead;
     char line[MAX_LINE];
     char currentDate[11];
@@ -13,7 +14,7 @@ void createTable(tTable *completeTable)
 
     i = 0;
 
-    fileToRead = fopen("readings.csv", "r");
+    fileToRead = fopen(filename, "r");
 
     while (fgets(line, sizeof(line), fileToRead))
     {
