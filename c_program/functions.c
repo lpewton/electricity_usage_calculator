@@ -173,6 +173,5 @@ void printInformation(tTable filteredTable, float totalCost, int chosenPeriod)
             totalCost = calculateTotalCost(filteredTable.nDays, filteredTable, chosenPeriod);
     }
     }
-    printf("==================================\n");
-    printf("TOTAL:                      %.2f€\n", totalCost);
+    printf(": %.2f€\n", totalCost);
 }

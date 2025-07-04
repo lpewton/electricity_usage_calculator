@@ -10,12 +10,26 @@
 </head>
 <body>
     <h1>Run Energy Usage Analysis</h1>
-    <form action="/run" method="post" enctype="multipart/form-data">
-        <label>CSV File:</label>
-        <input type="file" name="csvfile" required><br><br>
+    <form action="/save_file" method="post" enctype="multipart/form-data">
+  <label>CSV File:</label>
+  <input type="file" name="csvfile" required><br><br>
+  <button type="submit">Upload</button>
+</form>
 
-        <label>Chosen Parameter (0=All, 1=One Day, 2=Until Day):</label>
-        <input type="number" name="chosenParameter" min="0" max="2" required><br><br>
+    <form action="/run" method="post" enctype="multipart/form-data">
+
+        <label>Chosen Parameter</label>
+        <br>
+        <input type="radio" class="chosenParameterCheckbox" id="chosenParameterCheckbox1" value="0" name="chosenParameter">
+        <label for="chosenParameterCheckbox1">All</label>
+        <br>
+        <input type="radio" class="chosenParameterCheckbox" id="chosenParameterCheckbox2" value="1" name="chosenParameter">
+        <label for="chosenParameterCheckbox2">One Day</label>
+        <br>
+        <input type="radio" class="chosenParameterCheckbox" id="chosenParameterCheckbox1" value="2" name="chosenParameter">
+        <label for="chosenParameterCheckbox3">Until Day X</label>
+        <br>
+        <!-- <input type="number" name="chosenParameter" min="0" max="2" required><br><br> -->
 
         <label>Chosen Day (if param is 1 or 2):</label>
         <input type="text" name="chosenDay" placeholder="DD-MM-YYYY"><br><br>
@@ -26,9 +40,10 @@
         <button type="submit">Run Program</button>
     </form>
 
-    {% if output %}
-        <h2>Output:</h2>
-        <textarea readonly>{{ output }}</textarea>
-    {% endif %}
+        <h2>Per hour:</h2>
+        <textarea readonly>{{ total_cost }}</textarea>
+
+        <h2>Total:</h2>
+        <p>{{ cost_per_hour }}</p>
 </body>
 </html>
