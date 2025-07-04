@@ -1,0 +1,15 @@
+body {
+    background-color: #00326E;
+}
+
+.container {
+    background-color: #00AEEF;
+}
+
+.fileUpladedForm {
+    background-color: rgb(124, 239, 124);
+}
+
+.fileNotUpladedForm {
+    background-color: rgb(210, 96, 96);
+}

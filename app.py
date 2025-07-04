@@ -13,7 +13,9 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template(
+        'index.html',
+    )
 
 @app.route('/save_file', methods=['POST'])
 def save_file():
@@ -22,7 +24,10 @@ def save_file():
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
-        return redirect(url_for('index'))
+        return render_template(
+            'index.html',
+            fileUploaded=True
+)
     return "Invalid file", 400
 
 @app.route('/run', methods=['POST'])
@@ -34,6 +39,8 @@ def run_program():
 
     latest_file = max(list_of_files, key=os.path.getctime)
     filename = latest_file
+    if filename:
+        fileUploaded = True
 
     chosen_parameter = request.form['chosenParameter']
     chosen_day = request.form.get('chosenDay', '')
@@ -64,7 +71,8 @@ def run_program():
         'index.html',
         output=output,
         total_cost=total_cost.strip(),
-        cost_per_hour=cost_per_hour.strip()
+        cost_per_hour=cost_per_hour.strip(),
+        fileUploaded=fileUploaded
 )
 
 if __name__ == '__main__':
