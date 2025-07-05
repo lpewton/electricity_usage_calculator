@@ -1,1 +1,0 @@
-# electricity_usage_calculator
