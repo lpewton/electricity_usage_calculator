@@ -21,12 +21,12 @@ int main(int argc, char **argv)
 
     const char *filename = argv[1];  // first argument is the CSV file name
 
-    // If param is 1 or 2, we expect a chosenDay (e.g., "02-07-2025")
+    // If param is 1 or 2, we expect a chosenDay
     if (chosenParameter > 0 && argc > 3) {
         strncpy(chosenDay, argv[3], sizeof(chosenDay));
     }
 
-    // If param is 0, we expect a period (0 or 1)
+    // If param is 0, we expect a period
     if (chosenParameter == 0 && argc > 4) {
         chosenPeriod = atoi(argv[4]);
     }

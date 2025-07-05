@@ -53,7 +53,7 @@ def run_program():
     chosen_day = request.form.get('chosenDay', '')
     chosen_period = request.form.get('chosenPeriod', '0')
 
-    command = ['./cprog', latest_file, chosen_day, chosen_period]
+    command = ['./cprog', latest_file, chosen_parameter, chosen_day, chosen_period]
 
     try:
         result = subprocess.run(command, capture_output=True, text=True, check=True)
