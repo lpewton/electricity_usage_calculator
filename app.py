@@ -12,9 +12,17 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route('/')
-def index():
+def index(): 
+    list_of_files = glob.glob(os.path.join(app.config['UPLOAD_FOLDER'], '*.csv'))
+    if list_of_files:
+        latest_file = max(list_of_files, key=os.path.getctime)
+        if latest_file:
+            fileUploaded = True 
+    else:
+        fileUploaded = False   
     return render_template(
         'index.html',
+        fileUploaded=fileUploaded
     )
 
 @app.route('/save_file', methods=['POST'])
@@ -38,15 +46,14 @@ def run_program():
         return "No uploaded CSV file found", 400
 
     latest_file = max(list_of_files, key=os.path.getctime)
-    filename = latest_file
-    if filename:
+    if latest_file:
         fileUploaded = True
 
     chosen_parameter = request.form['chosenParameter']
     chosen_day = request.form.get('chosenDay', '')
     chosen_period = request.form.get('chosenPeriod', '0')
 
-    command = ['./cprog', filename, chosen_parameter]
+    command = ['./cprog', latest_file, chosen_parameter]
     if chosen_parameter == '0':
         command.append(chosen_period)
     else:

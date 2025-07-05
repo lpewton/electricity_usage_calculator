@@ -157,16 +157,12 @@ void printInformation(tTable filteredTable, float totalCost, int chosenPeriod)
     int i;
 
     if (chosenPeriod == 0) {
-    printf("DATE       | TIME | USAGE\n");
-    printf("==========================\n");
     for (i = 0; i < filteredTable.nHours; i++)
         {
             printf("%s | %.2dh   |%.3fkW = %.2f€\n", filteredTable.hours[i].date, filteredTable.hours[i].hour, filteredTable.hours[i].usage, filteredTable.hours[i].price);
             totalCost = calculateTotalCost(filteredTable.nHours, filteredTable, chosenPeriod);
         }
     } else {
-    printf("DATE       | USAGE | PRICE \n");
-    printf("==========================\n");
     for (i = 0; i < filteredTable.nDays; i++)
         {
             printf("%s   |%.3fkW = %.2f€\n", filteredTable.days[i].date, filteredTable.days[i].usage, filteredTable.days[i].price);

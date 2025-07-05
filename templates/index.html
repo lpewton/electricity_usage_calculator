@@ -27,43 +27,41 @@
       <button class="btn bg-primary p-1 text-white" type="submit">Upload</button>
     </form>
     {% endif %}
-    <hr>
-    <form action="/run" method="post" enctype="multipart/form-data">
-      
-      <label>Chosen Parameter</label>
-      <br>
-      <input type="radio" class="chosenParameterCheckbox" id="chosenParameterCheckbox1" value="0" name="chosenParameter" required>
-      <label for="chosenParameterCheckbox1">All</label>
-      <br>
-      <!-- <input type="radio" class="chosenParameterCheckbox" id="chosenParameterCheckbox2" value="1" name="chosenParameter">
-        <label for="chosenParameterCheckbox2">One Day</label>
-        <br>
-        <input type="radio" class="chosenParameterCheckbox" id="chosenParameterCheckbox1" value="2" name="chosenParameter">
-        <label for="chosenParameterCheckbox3">Until Day X</label>
-        <br> -->
-        <!-- <input type="number" name="chosenParameter" min="0" max="2" required><br><br> -->
-        
-        <!-- <label>Chosen Day (if param is 1 or 2):</label>
-          <input type="text" name="chosenDay" placeholder="DD-MM-YYYY"><br><br>
+    <hr class="col-6 mx-auto">
+      <form class="mx-auto p-2 mb-4 d-flex flex-column col-5 border-dark border bg-light" action="/run" method="post" enctype="multipart/form-data">
+        <label class="">What do you want to see?</label>
+        <label class="col-10" for="chosenParameterCheckbox1">
+          <input class="col-1 mb-3" type="radio" class="chosenParameterCheckbox" id="chosenParameterCheckbox1" value="0" name="chosenParameter" required>
+          All spending until today
+        </label>
+        <!-- <input type="radio" class="chosenParameterCheckbox" id="chosenParameterCheckbox2" value="1" name="chosenParameter">
+          <label for="chosenParameterCheckbox2">One Day</label>
+          <br>
+          <input type="radio" class="chosenParameterCheckbox" id="chosenParameterCheckbox1" value="2" name="chosenParameter">
+          <label for="chosenParameterCheckbox3">Until Day X</label>
+          <br> -->
+          <!-- <input type="number" name="chosenParameter" min="0" max="2" required><br><br> -->
           
-          <label>Chosen Period (if param is 0):</label>
-          <input type="number" name="chosenPeriod" min="0" max="1" value="0"><br><br> -->
+          <!-- <label>Chosen Day (if param is 1 or 2):</label>
+            <input type="text" name="chosenDay" placeholder="DD-MM-YYYY"><br><br>
+            
+            <label>Chosen Period (if param is 0):</label>
+            <input type="number" name="chosenPeriod" min="0" max="1" value="0"><br><br> -->
+            
+            <button class="btn bg-primary col-6 text-light" type="submit">Calculate Cost</button>
+          </form>
+
+          <div class="mx-auto d-flex flex-column results-div col-5 border border-dark bg-light p-2 mb-4">
+            <p class="">Total: {{ cost_per_hour }}</p>
+            <details>
+              <p style="white-space: pre-wrap;">{{ total_cost }}</p>
+            </details>
+          </div>
           
-          <button type="submit">Run Program</button>
-        </form>
-        
-        <h2>Total:</h2>
-        <p>{{ cost_per_hour }}</p>
-        
-        <h2>Per hour:</h2>
-        <details>
-          <p>{{ total_cost }}</p>
-        </details>
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-      </div>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+          crossorigin="anonymous"></script>
+        </div>
       </body>
       
       </html>
