@@ -14,6 +14,9 @@ void createTable(tTable *completeTable, const char *filename)
 
     i = 0;
     currentDate[0] = '\0';
+    completeTable->nDays = 0;
+    completeTable->nHours = 0;
+    completeTable->nMonths = 0;
 
     fileToRead = fopen(filename, "r");
 
@@ -46,20 +49,27 @@ void createTable(tTable *completeTable, const char *filename)
                     newHour.hour = atoi(&token[0]);
                     newHour.price = calculatePrice(newHour.usage, newHour.hour);
 
-                    if (strcmp(currentDate, newHour.date) != 0) {
+                    if (strcmp(currentDate, newHour.date) != 0)
+                    {
+                        if (newDay.date[0] == '0' && newDay.date[1] == '1') {
+                            completeTable->nMonths ++;
+                        }
+
                         completeTable->days[completeTable->nDays] = newDay;
                         strcpy(currentDate, newHour.date);
                         newDay.usage = newHour.usage;
                         newDay.price = newHour.price;
                         strcpy(newDay.date, newHour.date);
-                        completeTable->nDays += 1;
-                    } else {
+                        completeTable->nDays ++;
+                    }
+                    else
+                    {
                         newDay.usage += newHour.usage;
                         newDay.price += newHour.price;
                     }
 
                     completeTable->hours[completeTable->nHours] = newHour;
-                    completeTable->nHours += 1;
+                    completeTable->nHours ++;
                 }
             }
 
@@ -111,7 +121,13 @@ float calculateTotalCost(int maxDays, tTable filteredTable, int chosenPeriod)
 
     standingCharge = filteredTable.nDays * 0.7223;
 
-    return totalCost + standingCharge;
+    totalCost *= .95; // Remove 5% affinity discount
+
+    totalCost += standingCharge + filteredTable.nMonths * 3.23; // Add monthly charge
+
+    totalCost *= 1.09; // Add VAT
+
+    return totalCost;
 }
 
 void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11], int chosenParameter)
@@ -124,22 +140,26 @@ void createFilteredTable(tTable completeTable, tTable *filteredTable, char chose
     {
         for (i = 0; i < completeTable.nDays; i++) {
             filteredTable->days[filteredTable->nDays] = completeTable.days[i];
-            filteredTable->nDays += 1;
+            filteredTable->nDays ++;
         }
         for (i = 0; i < completeTable.nHours; i++)
         {
             filteredTable->hours[filteredTable->nHours] = completeTable.hours[i];
-            filteredTable->nHours += 1;
+            filteredTable->nHours++;
+        }
+        for (i = 0; i < completeTable.nMonths; i++)
+        {
+            filteredTable->nMonths++;
         }
     }
-    else if (chosenParameter == 1)
+    else if (chosenParameter == 1) // Just one day
     {
         for (i = 0; i < completeTable.nHours; i++)
         {
             if (strcmp(chosenDay, completeTable.hours[i].date) == 0)
             {
                 filteredTable->hours[filteredTable->nHours] = completeTable.hours[i];
-                filteredTable->nHours += 1;
+                filteredTable->nHours++;
             }
         }
     }
@@ -149,7 +169,7 @@ void createFilteredTable(tTable completeTable, tTable *filteredTable, char chose
         while (strcmp(chosenDay, completeTable.hours[i].date) != 0)
         {
             filteredTable->hours[filteredTable->nHours] = completeTable.hours[i];
-            filteredTable->nHours += 1;
+            filteredTable->nHours++;
             i++;
         }
     }

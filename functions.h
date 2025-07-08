@@ -27,6 +27,7 @@ typedef struct
     tHour hours[35040];
     int nHours;
     int nDays;
+    int nMonths;
 } tTable;
 
 
