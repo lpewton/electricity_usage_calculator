@@ -77,21 +77,22 @@ float calculatePrice(float usage, int hour)
 
     if (hour < 9 || hour > 22)
     {
-        priceValue = 17.89;
+        priceValue = 0.1789;
     }
     else
     {
-        priceValue = 36.15;
+        priceValue = 0.3615;
     }
 
     price = usage * priceValue;
 
-    return price / 100;
+    return price;
 }
 
 float calculateTotalCost(int maxDays, tTable filteredTable, int chosenPeriod)
 {
     float totalCost;
+    float standingCharge;
     int i;
 
     totalCost = 0;
@@ -107,7 +108,10 @@ float calculateTotalCost(int maxDays, tTable filteredTable, int chosenPeriod)
             totalCost += filteredTable.days[i].price;
         }
     }
-    return totalCost;
+
+    standingCharge = filteredTable.nDays * 0.7223;
+
+    return totalCost + standingCharge;
 }
 
 void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11], int chosenParameter)
