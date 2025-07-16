@@ -53,18 +53,12 @@
           Spending on a particular day
       </label>
 
-      <div id="chosenDayDiv" class="d-none">
-        <label>Chosen Day:</label>
-        <input type="text" name="chosenDay" placeholder="DD-MM-YYYY" class="mb-3">
-      </div>
-
-      <!-- <input type="radio" class="chosenParameterCheckbox" id="chosenParameterCheckbox1" value="2"
-        name="chosenParameter">
-      <label for="chosenParameterCheckbox3">Until Day X</label>
-      <br> -->
-      <!-- <input type="number" name="chosenParameter" min="0" max="2" required><br><br> -->
-
-
+      <label class="col-10" for="chosenParameterCheckbox3">
+        <input class="col-1 mb-3 chosenParameterCheckbox" type="radio" id="chosenParameterCheckbox3" value="2"
+          name="chosenParameter" required>
+          Spending on a particular period
+      </label>
+      
       <div id="dayOrHourDiv" class="d-none">
         <label>Do you want to see...?</label>
         <label class="col-10" for="chosenPeriodCheckbox1">
@@ -72,11 +66,25 @@
           name="chosenPeriod" checked>
           By half hour
         </label>
+
         <label class="col-10" for="chosenPeriodCheckbox2">
           <input class="col-1 mb-3" type="radio" class="chosenPeriodCheckbox" id="chosenPeriodCheckbox2" value="1"
           name="chosenPeriod">
           By day
         </label>
+      </div>
+
+      <div id="chosenDayDiv" class="d-none">
+        <label>Chosen Day:</label>
+        <input type="text" name="chosenDay" placeholder="DD-MM-YYYY" class="mb-3">
+      </div>
+
+      <div id="chosen-period-div" class="d-none">
+        <label>Chosen Starting Day:</label>
+        <input type="text" name="chosenDay" placeholder="DD-MM-YYYY" class="mb-3">
+
+        <label>Chosen Ending Day:</label>
+        <input type="text" name="chosenDay" placeholder="DD-MM-YYYY" class="mb-3">
       </div>
         
         <button class="btn bg-primary col-6 text-light" type="submit">Calculate Cost</button>
