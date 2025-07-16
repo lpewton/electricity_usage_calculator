@@ -1,6 +1,6 @@
 #include "functions.h"
 
-void createTable(tTable *completeTable, const char *filename)
+void createTable(tTable *completeTable, const char *filename) // Create complete table with all the info
 {
 
     FILE *fileToRead;
@@ -20,9 +20,10 @@ void createTable(tTable *completeTable, const char *filename)
 
     fileToRead = fopen(filename, "r");
 
-    if (fileToRead == NULL) {
-    perror("Error opening file");
-    exit(EXIT_FAILURE);
+    if (fileToRead == NULL)
+    {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
     }
 
     while (fgets(line, sizeof(line), fileToRead))
@@ -51,8 +52,9 @@ void createTable(tTable *completeTable, const char *filename)
 
                     if (strcmp(currentDate, newHour.date) != 0)
                     {
-                        if (newDay.date[0] == '0' && newDay.date[1] == '1') {
-                            completeTable->nMonths ++;
+                        if (newDay.date[0] == '0' && newDay.date[1] == '1')
+                        {
+                            completeTable->nMonths++;
                         }
 
                         completeTable->days[completeTable->nDays] = newDay;
@@ -60,7 +62,7 @@ void createTable(tTable *completeTable, const char *filename)
                         newDay.usage = newHour.usage;
                         newDay.price = newHour.price;
                         strcpy(newDay.date, newHour.date);
-                        completeTable->nDays ++;
+                        completeTable->nDays++;
                     }
                     else
                     {
@@ -69,7 +71,7 @@ void createTable(tTable *completeTable, const char *filename)
                     }
 
                     completeTable->hours[completeTable->nHours] = newHour;
-                    completeTable->nHours ++;
+                    completeTable->nHours++;
                 }
             }
 
@@ -80,7 +82,7 @@ void createTable(tTable *completeTable, const char *filename)
     fclose(fileToRead);
 }
 
-float calculatePrice(float usage, int hour)
+float calculatePrice(float usage, int hour) // Calculate the price for each hour
 {
     float price;
     float priceValue;
@@ -99,7 +101,7 @@ float calculatePrice(float usage, int hour)
     return price;
 }
 
-float calculateTotalCost(int maxDays, tTable filteredTable, int chosenPeriod)
+float calculateTotalCost(int maxDays, tTable filteredTable, int chosenPeriod) // Calculate the total cost for a period
 {
     float totalCost;
     float standingCharge;
@@ -130,17 +132,21 @@ float calculateTotalCost(int maxDays, tTable filteredTable, int chosenPeriod)
     return totalCost;
 }
 
-void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11], int chosenParameter)
+void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11], int chosenParameter, char chosenStartDay[11], char chosenEndDay[11]) // Create the table the user will see
 {
     int i;
+    int j;
+    bool begginCounting;
 
     filteredTable->nHours = 0;
+    begginCounting = false;
 
-    if (chosenParameter == 0)
+    if (chosenParameter == 0) // All of the days
     {
-        for (i = 0; i < completeTable.nDays; i++) {
+        for (i = 0; i < completeTable.nDays; i++)
+        {
             filteredTable->days[filteredTable->nDays] = completeTable.days[i];
-            filteredTable->nDays ++;
+            filteredTable->nDays++;
         }
         for (i = 0; i < completeTable.nHours; i++)
         {
@@ -163,11 +169,27 @@ void createFilteredTable(tTable completeTable, tTable *filteredTable, char chose
             }
         }
     }
-    else if (chosenParameter == 2)
+    else if (chosenParameter == 2) // Period between two days
     {
-    i = 0;
-        while (strcmp(chosenDay, completeTable.hours[i].date) != 0)
+        i = 0;
+        while (begginCounting == false)
         {
+            if (strcmp(chosenEndDay, completeTable.hours[i].date) == 0)
+            {
+                begginCounting = true;
+                i--; // Make sure the last half hour is counted
+            }
+            i++;
+        }
+
+        while (strcmp(chosenStartDay, completeTable.hours[i].date) != 0)
+        {
+            filteredTable->hours[filteredTable->nHours] = completeTable.hours[i];
+            filteredTable->nHours++;
+            i++;
+        }
+        for (j = 0; j < 48; j++)
+        { // Add the day the user inputted, as it's not included if not
             filteredTable->hours[filteredTable->nHours] = completeTable.hours[i];
             filteredTable->nHours++;
             i++;
@@ -175,22 +197,25 @@ void createFilteredTable(tTable completeTable, tTable *filteredTable, char chose
     }
 }
 
-void printInformation(tTable filteredTable, float totalCost, int chosenPeriod)
+void printInformation(tTable filteredTable, float totalCost, int chosenPeriod) // Print out the info the user will see
 {
     int i;
 
-    if (chosenPeriod == 0) { // Print by hour
-    for (i = 0; i < filteredTable.nHours; i++)
+    if (chosenPeriod == 0)
+    { // Print by hour
+        for (i = 0; i < filteredTable.nHours; i++)
         {
             printf("%s - %.2dh - %.3fkW = %.2f€\n", filteredTable.hours[i].date, filteredTable.hours[i].hour, filteredTable.hours[i].usage, filteredTable.hours[i].price);
             totalCost = calculateTotalCost(filteredTable.nHours, filteredTable, chosenPeriod);
         }
-    } else { // Print by day
-    for (i = 1; i < filteredTable.nDays; i++)
+    }
+    else
+    { // Print by day
+        for (i = 1; i < filteredTable.nDays; i++)
         {
             printf("%s - %.3fkW = %.2f€\n", filteredTable.days[i].date, filteredTable.days[i].usage, filteredTable.days[i].price);
             totalCost = calculateTotalCost(filteredTable.nDays, filteredTable, chosenPeriod);
+        }
     }
-    }
-    printf(": %.2f€\n", totalCost);
+    printf(":%.2f€\n", totalCost);
 }

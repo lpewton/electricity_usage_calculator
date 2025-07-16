@@ -38,7 +38,7 @@ float calculatePrice(float usage, int hour);
 
 float calculateTotalCost(int maxDays, tTable filteredTable, int chosenPeriod);
 
-void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11], int chosenParameter);
+void createFilteredTable(tTable completeTable, tTable *filteredTable, char chosenDay[11], int chosenParameter, char chosenStartDay[11], char chosenEndDay[11]);
 
 void printInformation(tTable filteredTable, float totalCost, int chosenPeriod);
 
