@@ -121,11 +121,11 @@ float calculateTotalCost(int maxDays, tTable filteredTable, int chosenPeriod) //
         }
     }
 
-    standingCharge = filteredTable.nDays * 0.7223;
+    standingCharge = filteredTable.nDays * 0.7223; // Confirmed as OK
 
     totalCost *= .95; // Remove 5% affinity discount
 
-    totalCost += standingCharge + filteredTable.nMonths * 3.23; // Add monthly charge
+    totalCost += standingCharge + filteredTable.nMonths * 3.23; // Add monthly charge, confirmed as OK
 
     totalCost *= 1.09; // Add VAT
 
@@ -139,6 +139,8 @@ void createFilteredTable(tTable completeTable, tTable *filteredTable, char chose
     bool begginCounting;
 
     filteredTable->nHours = 0;
+    filteredTable->nDays = 0;
+    filteredTable->nMonths = 0;
     begginCounting = false;
 
     if (chosenParameter == 0) // All of the days
@@ -187,6 +189,12 @@ void createFilteredTable(tTable completeTable, tTable *filteredTable, char chose
             filteredTable->hours[filteredTable->nHours] = completeTable.hours[i];
             filteredTable->nHours++;
             i++;
+            if (completeTable.hours[i].hour == 23 && (i % 2 == 1)) {
+                filteredTable->nDays += 1;
+                if (filteredTable->nDays % 30 == 0) {
+                    filteredTable->nMonths += 1;
+                }
+            }
         }
         for (j = 0; j < 48; j++)
         { // Add the day the user inputted, as it's not included if not
@@ -194,6 +202,7 @@ void createFilteredTable(tTable completeTable, tTable *filteredTable, char chose
             filteredTable->nHours++;
             i++;
         }
+        filteredTable->nDays += 1;
     }
 }
 
@@ -206,16 +215,16 @@ void printInformation(tTable filteredTable, float totalCost, int chosenPeriod) /
         for (i = 0; i < filteredTable.nHours; i++)
         {
             printf("%s - %.2dh - %.3fkW = %.2f€\n", filteredTable.hours[i].date, filteredTable.hours[i].hour, filteredTable.hours[i].usage, filteredTable.hours[i].price);
-            totalCost = calculateTotalCost(filteredTable.nHours, filteredTable, chosenPeriod);
         }
+            totalCost = calculateTotalCost(filteredTable.nHours, filteredTable, chosenPeriod);
     }
     else
     { // Print by day
         for (i = 1; i < filteredTable.nDays; i++)
         {
             printf("%s - %.3fkW = %.2f€\n", filteredTable.days[i].date, filteredTable.days[i].usage, filteredTable.days[i].price);
-            totalCost = calculateTotalCost(filteredTable.nDays, filteredTable, chosenPeriod);
         }
+            totalCost = calculateTotalCost(filteredTable.nDays, filteredTable, chosenPeriod);
     }
     printf(":%.2f€\n", totalCost);
 }
